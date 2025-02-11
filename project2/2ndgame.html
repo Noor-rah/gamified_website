@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Puzzle Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.0.0"></script>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .formula-box {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px;
+            padding: 10px;
+            background: #ff7043;
+            color: white;
+            display: inline-block;
+            border-radius: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+            gap: 5px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        .cell {
+            width: 60px;
+            height: 60px;
+            background-color: #ffeb3b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        .hidden {
+            opacity: 0;
+            transform: scale(0);
+        }
+    </style>
+</head>
+<body>
+    <h1>Math Puzzle Game</h1>
+    <div class="formula-box" id="formulaBox"></div>
+    <div class="grid" id="grid"></div>
+    <button onclick="createGrid()">Restart Game</button>
+    
+    <script>
+        const gridSize = 8;
+        let grid = [];
+        let currentFormula = {};
+        let selectedNumbers = [];
+        
+        function generateRandomNumber() {
+            return Math.floor(Math.random() * 20) + 1;
+        }
+
+        function generateFormula() {
+            const formulas = [
+                { formula: "5 + 3", answer: [5, 3] },
+                { formula: "10 - 2", answer: [10, 2] },
+                { formula: "2 * 4", answer: [2, 4] }
+            ];
+            currentFormula = formulas[Math.floor(Math.random() * formulas.length)];
+            document.getElementById("formulaBox").textContent = currentFormula.formula;
+        }
+
+        function createGrid() {
+            const gridElement = document.getElementById("grid");
+            gridElement.innerHTML = "";
+            grid = [];
+            selectedNumbers = [];
+            generateFormula();
+            
+            for (let r = 0; r < gridSize; r++) {
+                let row = [];
+                for (let c = 0; c < gridSize; c++) {
+                    const num = generateRandomNumber();
+                    row.push(num);
+                    const cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.textContent = num;
+                    cell.dataset.value = num;
+                    cell.addEventListener("click", handleCellClick);
+                    gridElement.appendChild(cell);
+                }
+                grid.push(row);
+            }
+        }
+
+        function handleCellClick(event) {
+            const cell = event.target;
+            const num = parseInt(cell.textContent);
+            selectedNumbers.push({ num, cell });
+
+            if (selectedNumbers.length === currentFormula.answer.length) {
+                if (arraysEqual(selectedNumbers.map(n => n.num), currentFormula.answer)) {
+                    selectedNumbers.forEach(item => {
+                        item.cell.classList.add("hidden");
+                        setTimeout(() => item.cell.textContent = "", 500);
+                    });
+                    triggerConfetti();
+                    generateFormula();
+                }
+                selectedNumbers = [];
+            }
+        }
+
+        function arraysEqual(arr1, arr2) {
+            return arr1.sort().toString() === arr2.sort().toString();
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        createGrid();
+    </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Potter Interactive Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-image: url('360_F_282648053_M5OUzeMEfKuYXXE8dCKhR2Vu6GAlvVC8.jpg');
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            transition: background 0.5s ease;
+        }
+
+        .dim-background {
+            background: rgba(0, 0, 0, 0.7);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .character {
+            width: 350px;
+            transition: transform 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .dialogue-box {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .next-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            background: gold;
+            color: black;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .quiz-box {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .question {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .option:hover {
+            background: gold;
+        }
+
+        .highlight {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="dim-background" id="dimBackground"></div>
+
+    <div class="container">
+        <img src="WhatsApp_Image_2025-02-08_at_19.32.27_7cd493fc-removebg-preview.png" alt="Harry Potter" class="character" id="character">
+        <div class="dialogue-box" id="dialogueBox">
+            <p id="dialogueText">"I am Harry Potter, the boy who lived!"</p>
+        </div>
+        <button class="next-button" onclick="nextDialogue()">Next</button>
+    </div>
+
+    <div class="quiz-box" id="quizBox">
+        <h2>Harry Potter Quiz</h2>
+        <p class="question" id="questionText">Loading question...</p>
+        <div id="options"></div>
+    </div>
+
+    <script>
+        const dialogues = [
+            '"Hi there! i am your personal friend"',
+            '"i will guide you throughout the game and show you tips and tricks."',
+            '"Let us get started!!"',
+            
+        ];
+
+        let currentDialogue = 0;
+        const dialogueBox = document.getElementById("dialogueBox");
+        const dialogueText = document.getElementById("dialogueText");
+        const character = document.getElementById("character");
+        const dimBackground = document.getElementById("dimBackground");
+        const quizBox = document.getElementById("quizBox");
+
+        function nextDialogue() {
+            if (currentDialogue < dialogues.length) {
+                dialogueBox.style.display = "block";
+                dimBackground.style.display = "block";
+                character.classList.add("highlight");
+                dialogueText.innerText = dialogues[currentDialogue];
+                currentDialogue++;
+            } else {
+                dialogueBox.style.display = "none";
+                dimBackground.style.display = "none";
+                character.classList.remove("highlight");
+                quizBox.style.display = "block";
+                loadQuestion();
+            }
+        }
+
+        const questions = [
+            { question: "What is Harry Potter's Patronus?", options: ["Stag", "Otter", "Phoenix", "Snake"], answer: "Stag" },
+            { question: "Who killed Dumbledore?", options: ["Snape", "Voldemort", "Draco Malfoy", "Bellatrix"], answer: "Snape" },
+            { question: "What house was Hermione in?", options: ["Ravenclaw", "Slytherin", "Gryffindor", "Hufflepuff"], answer: "Gryffindor" },
+            { question: "What is the name of Harry's owl?", options: ["Hedwig", "Crookshanks", "Fawkes", "Errol"], answer: "Hedwig" },
+            { question: "What position does Harry play in Quidditch?", options: ["Chaser", "Beater", "Seeker", "Keeper"], answer: "Seeker" }
+        ];
+
+        let selectedQuestions = [];
+        let currentQuestionIndex = 0;
+
+        while (selectedQuestions.length < 3) {
+            let randomIndex = Math.floor(Math.random() * questions.length);
+            if (!selectedQuestions.includes(questions[randomIndex])) {
+                selectedQuestions.push(questions[randomIndex]);
+            }
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= selectedQuestions.length) {
+                window.location.href = "congratulations.html";
+                return;
+            }
+
+            const questionObj = selectedQuestions[currentQuestionIndex];
+            document.getElementById("questionText").innerText = questionObj.question;
+
+            const optionsDiv = document.getElementById("options");
+            optionsDiv.innerHTML = "";
+            questionObj.options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.classList.add("option");
+                button.onclick = () => checkAnswer(option, questionObj.answer);
+                optionsDiv.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            if (selected === correct) {
+                alert("Correct!");
+            } else {
+                alert("Wrong! The correct answer is " + correct);
+            }
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    </script>
+</body>
+</html>

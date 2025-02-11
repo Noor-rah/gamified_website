@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz</title>
+    <style>
+        /* Import a modern font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+    color: #fff;
+}
+
+.quiz-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+}
+
+.question {
+    margin: 20px 0;
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+
+#answer {
+    padding: 12px 16px;
+    margin: 20px 0;
+    border: 2px solid #6a11cb;
+    border-radius: 8px;
+    font-size: 18px;
+    color: #333;
+    transition: border-color 0.3s ease-in-out;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#answer:focus {
+    outline: none;
+    border-color: #2575fc;
+}
+
+#submit-btn {
+    background-color: #6a11cb;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease-in-out;
+    font-family: 'Poppins', sans-serif;
+}
+
+#submit-btn:hover {
+    background-color: #2575fc;
+}
+
+p {
+    margin: 10px;
+    font-size: 16px;
+    color: #555;
+    text-align: center;
+}
+
+    </style>
+
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Math Quiz</h1>
+        <p>Score: <span id="score">0</span></p>
+        <p>Average Time: <span id="average-time">0</span> seconds</p>
+        <p>Time: <span id="current-time">0</span> seconds</p>
+        <div class="question" id="question">
+        </div>
+        <input type="number" id="answer" placeholder="Your Answer">
+        <button id="submit-btn">Submit</button>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
